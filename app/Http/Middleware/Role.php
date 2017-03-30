@@ -13,7 +13,7 @@ class Role
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $role)
     {
         if(\Auth::user()->can($role.'-access')){
             return $next($request);
