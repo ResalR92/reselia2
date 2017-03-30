@@ -16,12 +16,6 @@ Route::get('/', function () {
 });
 
 Route::auth();
-
 Route::get('/home', 'HomeController@index');
 
 Route::resource('categories','CategoriesController');
-
-
-Route::auth();
-
-Route::get('/home', 'HomeController@index');
