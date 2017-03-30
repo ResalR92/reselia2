@@ -8,6 +8,8 @@ use App\Http\Requests;
 
 use App\Product;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 class ProductsController extends Controller
 {
     public function __construct()
@@ -38,7 +40,7 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
+        return view('products.create');
     }
 
     /**
@@ -49,7 +51,26 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+            'name' => 'required|unique:products',
+            'model' => 'required',
+            'photo' => 'mimes:jpeg,png|max:10240',
+            'price' => 'required|numeric|min:1000'
+        ]);
+
+        $data = $request->only('name','model','price');
+
+        if($request->hasFile('photo')){
+            $data['photo'] = $this->savePhoto($request->file('photo'));
+        }
+
+        $products = Product::create($data);
+
+        $products->categories()->sync($request->get('category_lists'));
+
+        \Flash::success($products->name.' saved.');
+
+        return redirect()->route('products.index');
     }
 
     /**
@@ -95,5 +116,14 @@ class ProductsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    protected function savePhoto(UploadedFile $photo)
+    {
+        $fileName = str_random(40).'.'.$photo->guessClientExtension();
+        $destinationPath = public_path().DIRECTORY_SEPARATOR.'img';
+        $photo->move($destinationPath,$fileName);
+
+        return $fileName;
     }
 }

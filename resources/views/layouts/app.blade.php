@@ -21,6 +21,8 @@
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
 
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/selectize.bootstrap3.css') }}">
+
     <style>
         body {
             /*font-family: 'Lato';*/
@@ -110,6 +112,8 @@
 
     <script type="text/javascript" src="{{ asset('js/sweetalert.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/reselia.js') }}"></script>
+
+    <script type="text/javascript" src="{{ asset('js/selectize.min.js') }}"></script>
 </body>
 </html>
 
