@@ -8,6 +8,23 @@ class Category extends Model
 {
     protected $fillable = ['title','parent_id'];
 
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function($model){
+            //remove relations to products
+            $model->products()->detach();
+
+            //remove parent from this category's child
+            foreach($model->childs as $child){
+                $child->parent_id = '';
+                $child->save();
+            }
+        });
+    }
+
     public function childs()
     {
     	return $this->hasMany('App\Category','parent_id');

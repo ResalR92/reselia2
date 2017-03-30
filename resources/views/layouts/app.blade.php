@@ -19,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.min.css') }}">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
 
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
+
     <style>
         body {
             /*font-family: 'Lato';*/
@@ -104,6 +106,9 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> --}}
     <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+
+    <script type="text/javascript" src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/reselia.js') }}"></script>
 </body>
 </html>
 

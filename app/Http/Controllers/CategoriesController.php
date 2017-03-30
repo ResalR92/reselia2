@@ -77,7 +77,7 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         $category = Category::findOrFail($id);
-        
+
         return view('categories.edit',compact('category'));
     }
 
@@ -112,6 +112,10 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Category::find($id)->delete();
+
+        \Flash::success('Category deleted.');
+
+        return redirect()->route('categories.index');
     }
 }
