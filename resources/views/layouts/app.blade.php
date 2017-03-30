@@ -59,6 +59,7 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Manage <span class="caret"></span></a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a href="{{ route('categories.index') }}"><i class="fa fa-btn fa-tags"></i> Categories</a></li>
+                                        <li><a href="{{ route('products.index') }}"><i class="fa fa-btn fa-gift"></i> Products</a></li>
                                     </ul>
                             </li>
                         @endcan
