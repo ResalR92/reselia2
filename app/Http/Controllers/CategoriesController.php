@@ -22,8 +22,9 @@ class CategoriesController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::where('title','LIKE','%'.$request->get('q').'%')->paginate(5);
-        return view('categories.index',compact('categories'));
+        $q = $request->get('q');
+        $categories = Category::where('title','LIKE','%'.$q.'%')->paginate(5);
+        return view('categories.index',compact('categories','q'));
     }
 
     /**
