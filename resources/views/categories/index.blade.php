@@ -24,6 +24,7 @@
 							<tr>
 								<td>{{ $category->title }}</td>
 								<td>{{ $category->parent ? $category->parent->title : '' }}</td>
+								<td><a href="{{ route('categories.edit',$category->id) }}">Edit</a></td>
 							</tr>
 						@endforeach
 					</tbody>

@@ -76,7 +76,9 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $category = Category::findOrFail($id);
+        
+        return view('categories.edit',compact('category'));
     }
 
     /**
@@ -88,7 +90,18 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $category = Category::findOrFail($id);
+
+        $this->validate($request,[
+            'title' => 'required|string|max:255|unique:categories,title,'.$category->id,
+            'parent_id' => 'exists:categories,id'
+        ]);
+
+        $category->update($request->all());
+
+        \Flash::success($request->get('title').' category updated');
+
+        return redirect()->route('categories.index');
     }
 
     /**
