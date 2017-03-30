@@ -20,9 +20,9 @@ class CategoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::paginate(5);
+        $categories = Category::where('title','LIKE','%'.$request->get('q').'%')->paginate(5);
         return view('categories.index',compact('categories'));
     }
 
