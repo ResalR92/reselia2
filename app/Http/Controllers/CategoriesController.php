@@ -52,6 +52,8 @@ class CategoriesController extends Controller
 
         Category::create($request->all());
 
+        \Flash::success($request->get('title').' category saved.');
+
         return redirect()->route('categories.index');
     }
 
