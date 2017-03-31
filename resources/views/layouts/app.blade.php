@@ -22,16 +22,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/sweetalert.css') }}">
 
     <link rel="stylesheet" type="text/css" href="{{ asset('css/selectize.bootstrap3.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
 
-    <style>
-        body {
-            /*font-family: 'Lato';*/
-        }
-
-        .fa-btn {
-            margin-right: 6px;
-        }
-    </style>
 </head>
 <body id="app-layout">
     <nav class="navbar navbar-default navbar-static-top">
