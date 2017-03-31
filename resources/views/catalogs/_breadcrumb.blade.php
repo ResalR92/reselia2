@@ -5,4 +5,8 @@
 	@else
 		<li>Kategori Semua Produk</li>
 	@endif
+
+	<span class="pull-right">Urutkan Harga:
+		<a href="{{ appendQueryString(['sort'=>'price', 'order'=>'asc']) }}" class="btn btn-default btn-xs {{ isQueryStringEqual(['sort'=>'price', 'order'=>'asc']) ? 'active' : ''}}">Termurah</a> |
+		<a href="{{ appendQueryString(['sort'=>'price', 'order'=>'desc']) }}" class="btn btn-default btn-xs {{ isQueryStringEqual(['sort'=>'price', 'order'=>'desc']) ? 'active' : ''}}">Termahal</a>
 </ol>
