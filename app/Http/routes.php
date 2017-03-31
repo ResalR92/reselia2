@@ -12,6 +12,7 @@
 */
 
 Route::get('/','CatalogsController@index');
+Route::get('/catalogs','CatalogsController@index');
 
 Route::auth();
 Route::get('/home', 'HomeController@index');
