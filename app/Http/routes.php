@@ -22,3 +22,4 @@ Route::resource('products','ProductsController');
 
 Route::post('cart','CartController@addProduct');
 Route::get('cart','CartController@show');
+Route::delete('cart/{product_id}','CartController@removeProduct');

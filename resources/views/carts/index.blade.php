@@ -34,7 +34,16 @@
 							<td data-th="Harga">Rp{{ number_format($order['detail']['price']) }}</td>
 							<td data-th="Jumlah">{{ $order['quantity'] }}</td>
 							<td data-th="Subtotal" class="text-center">RP{{ number_format($order['subtotal']) }}</td>
-							<td>Untuk action</td>
+							<td class="actions" data-th="">
+								{!! Form::open(['url'=>['cart',$order['id']],'method'=>'delete','class'=>'form-inline']) !!}
+									{!! Form::button('<i class="fa fa-trash-o"></i>', [
+										'type' => 'submit',
+										'class'=>'btn btn-danger btn-sm js-submit-confirm',
+										'data-confirm-message' => 'Kamu akan menghapus '.$order['detail']['name'].' dari cart.'
+										])
+									!!}
+								{!! Form::close() !!}
+							</td>
 						</tr>
 					@endforeach
 				</tbody>
