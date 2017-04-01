@@ -11,7 +11,7 @@
 			html: true
 		}, function(isConfirm){
 			if(isConfirm){
-				window.location = '/cart';
+				window.location = 'cart';
 			}
 		});
 	});
