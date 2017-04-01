@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Product;
+use Session;
 
 class CartController extends Controller
 {
@@ -18,6 +19,8 @@ class CartController extends Controller
 
     	$product = Product::find($request->get('product_id'));
     	$quantity = $request->get('quantity');
+
+    	Session::flash('flash_product_name',$product->name);
 
     	$cart = $request->cookie('cart',[]);
 

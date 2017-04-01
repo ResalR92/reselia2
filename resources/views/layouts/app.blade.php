@@ -107,6 +107,9 @@
     <script type="text/javascript" src="{{ asset('js/reselia.js') }}"></script>
 
     <script type="text/javascript" src="{{ asset('js/selectize.min.js') }}"></script>
+    @if (Session::has('flash_product_name'))
+        @include('catalogs._product-added',['product_name'=>Session::get('flash_product_name')])
+    @endif
 </body>
 </html>
 
