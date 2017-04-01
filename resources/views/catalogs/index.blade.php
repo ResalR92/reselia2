@@ -26,7 +26,7 @@
 					</div>
 					@forelse($products as $product)
 						<div class="col-md-6">
-							@include('catalogs._product-thumnail',['product'=>$product])
+							@include('catalogs._product-thumbnail',['product'=>$product])
 						</div>
 						@empty
 							<div class="col-md-12 text-center">
