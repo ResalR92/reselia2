@@ -45,6 +45,7 @@ class CartService {
 		$result = [];
 		if($this->totalProduct() > 0){
 			foreach($this->lists() as $id => $quantity){
+				$product = Product::find($id);
 				array_push($result,[
 					'id' => $id,
 					'detail' => $product->toArray(),

@@ -21,3 +21,4 @@ Route::resource('categories','CategoriesController');
 Route::resource('products','ProductsController');
 
 Route::post('cart','CartController@addProduct');
+Route::get('cart','CartController@show');
