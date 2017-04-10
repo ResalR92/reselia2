@@ -23,4 +23,9 @@ $(document).ready(function() {
   $('.js-selectize').selectize({
     sortField: 'text'
   });
+
+  //checkout login form
+  if($('input[name=checkout_password]').length > 0 && $('input[name=is_guest]').length > 0 && $('input[name=is_guest]:checked').val() > 0){
+    $('input[name=checkout_password]').prop('disabled',true);
+  }
 });
