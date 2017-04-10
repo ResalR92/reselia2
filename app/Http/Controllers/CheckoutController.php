@@ -45,6 +45,9 @@ class CheckoutController extends Controller
     			return redirect('checkout/login')->withErrors($errors)->withInput(compact('email') + ['is_guest'=> 0]);
     		}
     		//(B) Logic ketika email di DB tanpa password
+    		//show view to request new password
+    		session()->flash('email',$email);
+    		return view('checkout.reset-password');
     	}
     	// (C) Logic ketika email tidak ada di DB
     }
