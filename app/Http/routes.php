@@ -35,6 +35,10 @@ Route::get('checkout/payment', function() {
 	return var_dump(session()->get('checkout'));
 });
 
+Route::get('checkout/payment','CheckoutController@payment');
+Route::post('checkout/payment','CheckoutController@postPayment');
+
+
 Route::group(['middleware' => 'api'], function () {
     Route::get('address/regencies', 'AddressController@regencies');
 });
