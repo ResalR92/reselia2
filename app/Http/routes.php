@@ -30,3 +30,7 @@ Route::post('checkout/login','CheckoutController@postLogin');
 
 Route::get('checkout/address','CheckoutController@address');
 Route::post('checkout/address','CheckoutController@postAddress');
+
+Route::group(['middleware' => 'api'], function () {
+    Route::get('address/regencies', 'AddressController@regencies');
+});

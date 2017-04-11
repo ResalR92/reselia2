@@ -28,4 +28,46 @@ $(document).ready(function() {
   if($('input[name=checkout_password]').length > 0 && $('input[name=is_guest]').length > 0 && $('input[name=is_guest]:checked').val() > 0){
     $('input[name=checkout_password]').prop('disabled',true);
   }
+
+  //dependent dropdown memilih kota
+  if($('#province_selector').length > 0) {
+    var xhr;
+    var province_selector, $province_selector;
+    var regency_selector, $regency_selector;
+
+    $province_selector = $('#province_selector').selectize({
+      sorfField: 'text',
+      onChange: function(value) {
+        if(!value.length) {
+          regency_selector.disable();
+          regency_selector.clearOptions();
+          return;
+        }
+        regency_selector.clearOptions();
+        regency_selector.load(function(callback){
+          // xhr && xhr.abort();
+
+          xhr = $.ajax({
+            url: '../address/regencies?province_id='+value,
+            success: function(results) {
+              regency_selector.enable();
+              callback(results);
+            },
+            error:function() {
+              callback();
+            }
+          });
+        });
+      }
+    });
+    $regency_selector = $('#regency_selector').selectize({
+      sorfField: 'name',
+      valueField: 'id',
+      labelField: 'name',
+      searchField: ['name']
+    });
+
+    province_selector = $province_selector[0].selectize;
+    regency_selector = $regency_selector[0].selectize;
+  }
 });
