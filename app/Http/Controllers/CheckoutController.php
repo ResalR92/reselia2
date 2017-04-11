@@ -55,4 +55,9 @@ class CheckoutController extends Controller
 
         return redirect('checkout/address');
     }
+
+    public function address()
+    {
+        return view('checkout.address');
+    }
 }
