@@ -94,4 +94,19 @@ class CartService {
 		} 
 		return Cookie::forget('cart');
 	}
+
+	protected function getDestinationId() 
+	{
+		return session('checkout.address.regency_id');
+	}
+
+	public function shippingFee()
+	{
+		$totalFee = 0;
+		foreach($this->lists() as $id => $quantity) {
+			$fee = Product::find($id)->getCostTo($this->getDestinationId()) * $quantity;
+			$totalFee += $fee;
+		}
+		return $totalFee;
+	}
 }
