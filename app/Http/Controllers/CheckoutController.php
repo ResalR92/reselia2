@@ -26,24 +26,41 @@ class CheckoutController extends Controller
 
     public function login()
     {
-    	return view('checkout.login');
+    	if(Auth::check()) {
+            return redirect('/checkout/address');
+        } else{
+            return view('checkout.login');
+        }
     }
 
     public function postLogin(CheckoutLoginRequest $request)
     {
-    	$email = $request->get('email');
-    	$password = $request->get('checkout_password');
-    	$is_guest = $request->get('is_guest') > 0;
+        $email = $request->get('email');
+        $password = $request->get('checkout_password');
+        $is_guest = $request->get('is_guest') > 0;
 
-    	if($is_guest) {
-    		return $this->guestCheckout($email);
-    	}
-    	return $this->authenticatedCheckout($email,$password);
+        if ($is_guest) {
+            return $this->guestCheckout($email);
+        }
+
+        return $this->authenticatedCheckout($email, $password);
     }
 
-    public function authenticatedCheckout($email, $password)
+    protected function authenticatedCheckout($email, $password)
     {
-    	return 'Logic untuk authenticated checkout belum dibuat';
+        // login
+        if (!Auth::attempt(['email' => $email, 'password' => $password])) {
+            // Authentication failed..
+            $errors = new MessageBag();
+            $errors->add('email', 'Data user yang dimasukan salah');
+            return redirect('checkout/login')
+                ->withInput(compact('email', 'password') + ['is_guest' => 0])
+                ->withErrors($errors);
+        }
+
+        // logged in, merge cart (destroy cart cookie)
+        $deleteCartCookie = $this->cart->merge();
+        return redirect('checkout/address')->withCookie($deleteCartCookie);
     }
 
     public function guestCheckout($email)
