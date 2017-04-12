@@ -10,9 +10,20 @@ use Illuminate\Support\MessageBag;
 use App\User;
 use App\Http\Requests\CheckoutAddressRequest;
 use Auth;
+use App\Address;
+use App\Product;
+use App\Support\CartService;
+use App\Order;
+use App\OrderDetail;
 
 class CheckoutController extends Controller
 {
+    protected $cart;
+    public function __construct(CartService $cart)
+    {
+        $this->cart = $cart;
+    }
+
     public function login()
     {
     	return view('checkout.login');
@@ -94,5 +105,80 @@ class CheckoutController extends Controller
     public function payment()
     {
         return view('checkout.payment');
+    }
+
+    public function postPayment(Request $request)
+    {
+        $this->validate($request,[
+            'bank_name' => 'required|in:'.implode(',',array_keys(config('bank-accounts'))),
+            'sender' => 'required'
+        ]);
+        session([
+            'checkout.payment.bank' => $request->get('bank_name'),
+            'checkout.payment.sender' => $request->get('sender')
+        ]);
+        if(Auth::check()) return $this->authenticatedPayment($request);
+        return $this->guestPayment($request);
+    }
+
+    protected function authenticatedPayment(Request $request)
+    {
+        return "akan diisi dengan logic authenticated payment";
+    }
+
+    //payment untuk user belum login / guest
+    protected function guestPayment(Request $request)
+    {
+        //create user account
+        $user = $this->setupCustomer(session('checkout.email'),session('checkout.address.name'));
+        //create address
+        $bank= session('checkout.payment.bank');
+        $sender = session('checkout.payment.sender');
+        $address = $this->setupAddress($user,session('checkout.address'));
+        //create record
+        $order = $this->makeOrder($user->id, $bank, $sender, $address, $this->cart->details());
+        //delete session data
+        session()->forget('checkout');
+        $deleteCartCookie = $this->cart->clearCartCookie();
+
+        return redirect('checkout/success')->with(compact('order'))->withCookie($deleteCartCookie);
+    }
+
+    protected function setupCustomer($email,$name)
+    {
+        $user = User::create(compact('email','name'));
+        $user->role = 'customer';
+        $user->save();
+        return $user;
+    }
+
+    protected function setupAddress(User $customer, $addressSession)
+    {
+        return Address::create([
+            'user_id' => $customer->id,
+            'name' => $addressSession['name'],
+            'detail' => $addressSession['detail'],
+            'regency_id' => $addressSession['regency_id'],
+            'phone' => $addressSession['phone']
+        ]);
+    }
+
+    public function makeOrder($user_id, $bank, $sender, Address $address, $cart)
+    {
+        $status = 'waiting-payment';
+        $address_id = $address->id;
+        $order = Order::create(compact('user_id','address_id','bank','sender','status'));
+
+        foreach($cart as $product) {
+            OrderDetail::create([
+                'order_id' => $order->id,
+                'address_id' => $address->id,
+                'product_id' => $product['id'],
+                'quantity' => $product['quantity'],
+                'price' => $product['detail']['price'],
+                'fee' => Product::find($product['id'])->getCostTo($address->regency_id)
+            ]);
+        }
+        return Order::find($order->id);
     }
 }

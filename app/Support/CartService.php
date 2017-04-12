@@ -109,4 +109,9 @@ class CartService {
 		}
 		return $totalFee;
 	}
+
+	public function clearCartCookie()
+	{
+		return Cookie::forget('cart');
+	}
 }
