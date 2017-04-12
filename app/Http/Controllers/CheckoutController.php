@@ -181,4 +181,9 @@ class CheckoutController extends Controller
         }
         return Order::find($order->id);
     }
+
+    public function success()
+    {
+        return view('checkout.success');
+    }
 }
