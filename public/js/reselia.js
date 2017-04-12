@@ -70,4 +70,22 @@ $(document).ready(function() {
     province_selector = $province_selector[0].selectize;
     regency_selector = $regency_selector[0].selectize;
   }
+
+  // dynamically hide new address form for authenticated user
+  if ($('input[name="address_id"]').length > 0) {
+    var selected = $('input[name="address_id"]:checked').val();
+    if (selected === 'undefined' || selected !== 'new-address') {
+      $('#js-new-address').hide();
+    }
+
+    $('input[name="address_id"]').change(function () {
+      var selected = $('input[name="address_id"]:checked').val();
+      if (selected === 'new-address') {
+        $('#js-new-address').show();
+      } else {
+        $('#js-new-address').hide();
+      }
+    });
+  }
+
 });
