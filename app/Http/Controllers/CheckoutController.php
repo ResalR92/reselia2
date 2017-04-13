@@ -26,6 +26,10 @@ class CheckoutController extends Controller
         $this->middleware('checkout.have-cart', [
             'only' => ['login','postLogin','address','postAddress','payment','postPayment']
         ]);
+
+        $this->middleware('checkout.login-step-done', [
+            'only' => ['address', 'postAddress', 'payment', 'postPayment']
+        ]);
     }
 
     public function login()
