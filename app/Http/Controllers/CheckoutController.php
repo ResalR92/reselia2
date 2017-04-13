@@ -99,8 +99,17 @@ class CheckoutController extends Controller
 
     protected function authenticatedAddress(CheckoutAddressRequest $request)
     {
-        return "Akan diisi untuk logic authenticated address";
-    }
+        // return "Akan diisi untuk logic authenticated address";
+        $address_id = $request->get('address_id');
+        //clear old
+        session()->forget('checkout.address');
+        if($address_id == 'new-address'){
+            $this->saveAddressSession($request);
+        } else {
+            session(['checkout.address.address_id'=> $address_id]);
+        }
+        return redirect('checkout/payment');
+    } 
 
     protected function guestAddress(CheckoutAddressRequest $request)
     {
