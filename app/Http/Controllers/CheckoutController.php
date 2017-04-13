@@ -149,7 +149,16 @@ class CheckoutController extends Controller
 
     protected function authenticatedPayment(Request $request)
     {
-        return "akan diisi dengan logic authenticated payment";
+        // return "akan diisi dengan logic authenticated payment";
+        $user = Auth::user();
+        $bank = session('checkout.payment.bank');
+        $sender = session('checkout.payment.sender');
+        $address = $this->setupAddress($user, session('checkout.address'));
+        $order = $this->makeOrder($user->id, $bank, $sender, $address, $this->cart->details());
+        // delete session data
+        session()->forget('checkout');
+        $this->cart->clearCartRecord();
+        return redirect('checkout/success')->with(compact('order'));
     }
 
     //payment untuk user belum login / guest
@@ -180,6 +189,10 @@ class CheckoutController extends Controller
 
     protected function setupAddress(User $customer, $addressSession)
     {
+        if(Auth::check() && isset($addressSession['address_id'])) {
+            return Address::find($addressSession['address_id']);
+        } 
+
         return Address::create([
             'user_id' => $customer->id,
             'name' => $addressSession['name'],

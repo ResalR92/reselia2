@@ -119,4 +119,9 @@ class CartService {
 	{
 		return Cookie::forget('cart');
 	}
+
+	public function clearCartRecord()
+    {
+        return Cart::where('user_id', Auth::user()->id)->delete();
+    }
 }
