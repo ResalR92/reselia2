@@ -28,17 +28,25 @@ class OrdersController extends Controller
     				});
     		});
     	}
-    	$orders = $orders->paginate(5);
+    	$orders = $orders->orderBy('updated_at','desc')->paginate(5);
     	return view('orders.index',compact('orders','status','q'));
     }
 
     public function edit($id)
     {
-
+    	$order = Order::find($id);
+    	return view('orders.edit')->with(compact('order'));
     }
 
     public function update(Request $request, $id)
     {
+    	$order = Order::find($id);
+    	$this->validate($request,[
+    		'status' => 'required|in:'.implode(',',Order::allowedStatus())
+    	]);
+    	$order->update($request->only('status'));
+    	\Flash::success($order->padded_id.' berhasil disimpan');
 
+    	return redirect()->route('orders.index');
     }
 }

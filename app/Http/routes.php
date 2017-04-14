@@ -36,7 +36,7 @@ Route::post('checkout/payment','CheckoutController@postPayment');
 
 Route::get('checkout/success', 'CheckoutController@success');
 
-Route::resource('orders','OrdersController',['only'=>'index','edit','update']);
+Route::resource('orders','OrdersController');
 
 
 Route::group(['middleware' => 'api'], function () {

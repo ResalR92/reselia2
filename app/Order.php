@@ -53,7 +53,7 @@ class Order extends Model
         return static::statusList()[$this->status];
     }
 
-    public function allowedStatus()
+    public static function allowedStatus()
     {
         return array_keys(static::statusList());
     }
