@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Cart;
 use Cookie;
+use App\Address;
 
 class CartService {
 	protected $request;
@@ -97,6 +98,10 @@ class CartService {
 
 	protected function getDestinationId() 
 	{
+		if(Auth::check() && session()->has('checkout.address.address_id') ) {
+			$address = Address::find(session('checkout.address.address_id'));
+			return $address->regency_id;
+		}
 		return session('checkout.address.regency_id');
 	}
 
@@ -114,4 +119,9 @@ class CartService {
 	{
 		return Cookie::forget('cart');
 	}
+
+	public function clearCartRecord()
+    {
+        return Cart::where('user_id', Auth::user()->id)->delete();
+    }
 }

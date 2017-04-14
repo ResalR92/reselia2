@@ -22,28 +22,61 @@ class CheckoutController extends Controller
     public function __construct(CartService $cart)
     {
         $this->cart = $cart;
+
+        $this->middleware('checkout.have-cart', [
+            'only' => ['login','postLogin','address','postAddress','payment','postPayment']
+        ]);
+
+        $this->middleware('checkout.login-step-done', [
+            'only' => ['address', 'postAddress', 'payment', 'postPayment']
+        ]);
+
+        $this->middleware('checkout.address-step-done', [
+            'only' => ['payment', 'postPayment']
+        ]);
+
+        $this->middleware('checkout.payment-step-done', [
+            'only' => ['success']
+        ]);
     }
 
     public function login()
     {
-    	return view('checkout.login');
+    	if(Auth::check()) {
+            return redirect('/checkout/address');
+        } else{
+            return view('checkout.login');
+        }
     }
 
     public function postLogin(CheckoutLoginRequest $request)
     {
-    	$email = $request->get('email');
-    	$password = $request->get('checkout_password');
-    	$is_guest = $request->get('is_guest') > 0;
+        $email = $request->get('email');
+        $password = $request->get('checkout_password');
+        $is_guest = $request->get('is_guest') > 0;
 
-    	if($is_guest) {
-    		return $this->guestCheckout($email);
-    	}
-    	return $this->authenticatedCheckout($email,$password);
+        if ($is_guest) {
+            return $this->guestCheckout($email);
+        }
+
+        return $this->authenticatedCheckout($email, $password);
     }
 
-    public function authenticatedCheckout($email, $password)
+    protected function authenticatedCheckout($email, $password)
     {
-    	return 'Logic untuk authenticated checkout belum dibuat';
+        // login
+        if (!Auth::attempt(['email' => $email, 'password' => $password])) {
+            // Authentication failed..
+            $errors = new MessageBag();
+            $errors->add('email', 'Data user yang dimasukan salah');
+            return redirect('checkout/login')
+                ->withInput(compact('email', 'password') + ['is_guest' => 0])
+                ->withErrors($errors);
+        }
+
+        // logged in, merge cart (destroy cart cookie)
+        $deleteCartCookie = $this->cart->merge();
+        return redirect('checkout/address')->withCookie($deleteCartCookie);
     }
 
     public function guestCheckout($email)
@@ -82,8 +115,17 @@ class CheckoutController extends Controller
 
     protected function authenticatedAddress(CheckoutAddressRequest $request)
     {
-        return "Akan diisi untuk logic authenticated address";
-    }
+        // return "Akan diisi untuk logic authenticated address";
+        $address_id = $request->get('address_id');
+        //clear old
+        session()->forget('checkout.address');
+        if($address_id == 'new-address'){
+            $this->saveAddressSession($request);
+        } else {
+            session(['checkout.address.address_id'=> $address_id]);
+        }
+        return redirect('checkout/payment');
+    } 
 
     protected function guestAddress(CheckoutAddressRequest $request)
     {
@@ -123,7 +165,16 @@ class CheckoutController extends Controller
 
     protected function authenticatedPayment(Request $request)
     {
-        return "akan diisi dengan logic authenticated payment";
+        // return "akan diisi dengan logic authenticated payment";
+        $user = Auth::user();
+        $bank = session('checkout.payment.bank');
+        $sender = session('checkout.payment.sender');
+        $address = $this->setupAddress($user, session('checkout.address'));
+        $order = $this->makeOrder($user->id, $bank, $sender, $address, $this->cart->details());
+        // delete session data
+        session()->forget('checkout');
+        $this->cart->clearCartRecord();
+        return redirect('checkout/success')->with(compact('order'));
     }
 
     //payment untuk user belum login / guest
@@ -154,6 +205,10 @@ class CheckoutController extends Controller
 
     protected function setupAddress(User $customer, $addressSession)
     {
+        if(Auth::check() && isset($addressSession['address_id'])) {
+            return Address::find($addressSession['address_id']);
+        } 
+
         return Address::create([
             'user_id' => $customer->id,
             'name' => $addressSession['name'],
