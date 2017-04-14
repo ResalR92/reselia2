@@ -6,7 +6,7 @@
 			<div class="col-md-12">
 				{!! Form::open(['url'=>'orders','method'=>'get','class'=>'form-inline']) !!}
 					<div class="form-group {!! $errors->has('q') ? 'has-error' : '' !!}">
-						{!! Form::text('q', isset($q) ? $q : null, ['class'=>'form-control','placeholder'=>'Order ID']) !!}
+						{!! Form::text('q', isset($q) ? $q : null, ['class'=>'form-control','placeholder'=>'Order ID/Customer...']) !!}
 						{!! $errors->first('q','<p class="help-block">:message</p>') !!}
 					</div>
 					<div class="form-group {!! $errors->has('status') ? 'has-error' : '' !!}">
