@@ -4,14 +4,21 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
+				{!! Form::open(['url'=>'orders','method'=>'get','class'=>'form-inline']) !!}
+					<div class="form-group {!! $errors->has('status') ? 'has-error' : '' !!}">
+						{!! Form::select('status', [''=>'Semua status']+App\Order::statusList(), isset($status) ? $status : null, ['class'=>'form-control']) !!}
+						{!! $errors->first('status','<p class="help-block">:message</p>') !!}
+					</div>
+					{!! Form::submit('Cari', ['class'=>'btn btn-primary']) !!}
+				{!! Form::close() !!}
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<td>Order #</td>
-							<td>Customer</td>
-							<td>Status</td>
-							<td>Pembayaran</td>
-							<td>Update terakhir</td>
+							<th>Order #</th>
+							<th>Customer</th>
+							<th>Status</th>
+							<th>Pembayaran</th>
+							<th>Update terakhir</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -34,7 +41,7 @@
 						@endforelse
 					</tbody>
 				</table>
-				{!! $orders->links() !!}
+				{!! $orders->appends(compact('status'))->links() !!}
 			</div>
 		</div>
 	</div>

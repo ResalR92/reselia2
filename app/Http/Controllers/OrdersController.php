@@ -17,8 +17,9 @@ class OrdersController extends Controller
 
     public function index(Request $request)
     {
-    	$orders = Order::paginate(5);
-    	return view('orders.index',compact('orders'));
+    	$status = $request->get('status');
+    	$orders = Order::where('status','LIKE','%'.$status.'%')->paginate(5);
+    	return view('orders.index',compact('orders','status'));
     }
 
     public function edit($id)
