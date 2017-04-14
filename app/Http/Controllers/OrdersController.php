@@ -18,8 +18,13 @@ class OrdersController extends Controller
     public function index(Request $request)
     {
     	$status = $request->get('status');
-    	$orders = Order::where('status','LIKE','%'.$status.'%')->paginate(5);
-    	return view('orders.index',compact('orders','status'));
+    	$orders = Order::where('status','LIKE','%'.$status.'%');
+    	if($request->has('q')) {
+    		$q = $request->get('q');
+    		$orders = $orders->where('id',$q);
+    	}
+    	$orders = $orders->paginate(5);
+    	return view('orders.index',compact('orders','status','q'));
     }
 
     public function edit($id)
