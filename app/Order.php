@@ -37,4 +37,24 @@ class Order extends Model
     {
     	return str_pad($this->id,6,0, STR_PAD_LEFT);
     }
+
+    public static function statusList()
+    {
+        return [
+            'waiting-payment' => 'Menunggu Pembayaran',
+            'packaging' => 'Order disiapkan',
+            'sent' => 'Paket dikirim',
+            'finished' => 'Paket diterima'
+        ];
+    }
+
+    public function getHumanStatusAttribute()
+    {
+        return static::statusList()[$this->status];
+    }
+
+    public function allowedStatus()
+    {
+        return array_keys(static::statusList());
+    }
 }
