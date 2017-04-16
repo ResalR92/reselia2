@@ -15,11 +15,11 @@
 			</tr>
 			<tr>
 				<td data-th="Subtotal">Subtotal</td>
-				<td data-th="Subtotal" class="text-right" colspan="2">Rp {{ number_format($detail->price) }}</td>
+				<td data-th="Subtotal" class="text-right" colspan="2">Rp {{ number_format($detail->price * $detail->quantity) }}</td>
 			</tr>
 			<tr>
 				<td data-th="Subtotal">Ongkos Kirim</td>
-				<td data-th="Subtotal" class="text-right" colspan="2">Rp {{ number_format($detail->fee) }}</td>
+				<td data-th="Subtotal" class="text-right" colspan="2">Rp {{ number_format($detail->fee * $detail->quantity) }}</td>
 			</tr>
 		@endforeach
 	</tbody>

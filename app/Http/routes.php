@@ -38,6 +38,8 @@ Route::get('checkout/success', 'CheckoutController@success');
 
 Route::resource('orders','OrdersController');
 
+Route::get('/home/orders','HomeController@viewOrders');
+
 
 Route::group(['middleware' => 'api'], function () {
     Route::get('address/regencies', 'AddressController@regencies');
